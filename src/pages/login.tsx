@@ -3,16 +3,14 @@ import {
     CardContent, 
     CardTitle, 
     CardHeader,
-    CardDescription, 
 } from "@/components/ui/card";
-
 import {
     Avatar, 
     AvatarFallback, 
     AvatarImage
 } from "@/components/ui/avatar"
 
-
+import { toast } from "sonner"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {Button} from "@/components/ui/button"
@@ -21,15 +19,16 @@ import axios from "axios"
 import {useNavigate} from "react-router-dom"
 
 
-
 export default function Login(){
+
+
     const navigator = useNavigate()
     const [email, setEmail] = useState("");
     const [pass, setPass] = useState("")
 
     function handleTestClick(){
         setEmail("admin@gmail.com")
-        setPass("admin")
+        setPass("123")
     }
     function handleSubmit(){
         if(!email || !pass){
@@ -39,8 +38,14 @@ export default function Login(){
         axios.post("https://auth-sistem.vercel.app/auth", {email: email, pass: pass})
         .then(response => {
             if(response.status === 200){
-                alert("logado com sucesso")
-                console.log(response)
+                toast("Logado com sucesso", {
+                    description: "Sua conta foi logada com sucesso",
+                    action: {
+                        label: "Close",
+                        onClick: () => console.log("close")
+                    }
+                })
+                navigator("/verify")
             }
         }).catch(err =>{
             console.log(err)

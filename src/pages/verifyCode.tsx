@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import axios from "axios";
+import { toast } from "sonner";
 import React, { useState, useRef, ChangeEvent} from "react";
 import { MdEmail } from "react-icons/md";
 
@@ -26,9 +28,34 @@ export default function(){
         }
     }
 
+    // O(1) complexidade de tempo ja que o numero maximo e minimo de valores que se recebe é 6
+    function handleClick(){
+        function concatVals(array: string[]){
+            let temp:string = "";
+            for(let i = 0; i< array.length; i++){
+                temp+= array[i]
+            }
+            return temp
+        }
+        const code = concatVals(inputValues)
+        axios.post("https://auth-sistem.vercel.app/auth/2fa", {code})
+        .then(response => {
+            if(response.status === 200){
+                toast("logado com sucesso", {
+                    action: {
+                        label: "close",
+                        onClick: () => console.log("close")
+                    }
+                })
+            }
+        }).catch(err => {
+            alert("codes did not match")
+            console.error(err)
+        })
+    }
+
     return(
         <div className="w-screen h-screen flex justify-center items-center">
-
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-xl"><MdEmail className="text-4xl"/> Insira o codigo que foi mandado no email</CardTitle>
@@ -50,8 +77,7 @@ export default function(){
                         )
                     })}
                     </div>
-                    <Button className="p-4">Enviar</Button>
-
+                    <Button className="p-4" onClick={handleClick}>Enviar</Button>
             </CardContent>
             </Card>
         </div>
