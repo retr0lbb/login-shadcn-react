@@ -74,3 +74,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+.inputCode{
+  width: 4rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 16px;
+}

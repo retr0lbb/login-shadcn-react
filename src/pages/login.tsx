@@ -17,20 +17,35 @@ import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {Button} from "@/components/ui/button"
 import { useState } from "react";
+import axios from "axios"
+import {useNavigate} from "react-router-dom"
 
 
 
 export default function Login(){
+    const navigator = useNavigate()
     const [email, setEmail] = useState("");
     const [pass, setPass] = useState("")
 
     function handleTestClick(){
         setEmail("admin@gmail.com")
         setPass("admin")
-
-        console.log(email, pass)
     }
+    function handleSubmit(){
+        if(!email || !pass){
+            alert("Data must be provided")
+        }
 
+        axios.post("https://auth-sistem.vercel.app/auth", {email: email, pass: pass})
+        .then(response => {
+            if(response.status === 200){
+                alert("logado com sucesso")
+                console.log(response)
+            }
+        }).catch(err =>{
+            console.log(err)
+        })
+    }
 
 
     return(
@@ -48,6 +63,7 @@ export default function Login(){
                 <CardContent className="flex transition-all">
                     <form onSubmit={(e)=>{
                         e.preventDefault()
+                        handleSubmit()
                     }}>
 
                         <Label className="text-[#FFFFFF] w-full" htmlFor="email">Email</Label>
