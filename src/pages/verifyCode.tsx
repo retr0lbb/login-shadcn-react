@@ -5,10 +5,24 @@ import axios from "axios";
 import { toast } from "sonner";
 import React, { useState, useRef, ChangeEvent} from "react";
 import { MdEmail } from "react-icons/md";
+import { FaArrowLeft } from "react-icons/fa";
+import {useNavigate} from "react-router-dom"
+import { useEffect } from "react";
+
+
+
+
 
 export default function(){
     const [inputValues, setInputValues]= useState(['', '', '', '', '', ''])
     const inputRefs = useRef<HTMLInputElement[]>([])
+    const navigator = useNavigate()
+
+    useEffect(() =>{
+        if(localStorage.getItem("token") || localStorage.getItem("email")){
+            navigator("/content");
+        }
+    }, [])
 
     const handleChange = (index: number, event: ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
@@ -25,6 +39,13 @@ export default function(){
         if(event.key === "Backspace" && index > 0 && inputValues[index] === ''){
             inputRefs.current[index- 1].focus()
 
+        }
+    }
+    const verifyLocalStorage =() =>{
+        const token = localStorage.getItem("token")
+        const email = localStorage.getItem("email")
+        if(token || email){
+            localStorage.clear()
         }
     }
 
@@ -47,6 +68,12 @@ export default function(){
                         onClick: () => console.log("close")
                     }
                 })
+                verifyLocalStorage()
+                const token = response.data.access_token;
+                const email = response.data.email
+                localStorage.setItem("token", token)
+                localStorage.setItem("email", email)
+                navigator("/content")
             }
         }).catch(err => {
             alert("codes did not match")
@@ -55,11 +82,15 @@ export default function(){
     }
 
     return(
+        <>
+        <div className="absolute top-10 left-10 cursor-pointer text-3xl rounded-full bg-slate-400 p-4" onClick={() =>{
+            navigator("/")
+        }}><FaArrowLeft /></div>
         <div className="w-screen h-screen flex justify-center items-center">
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-xl"><MdEmail className="text-4xl"/> Insira o codigo que foi mandado no email</CardTitle>
-                    <CardDescription> Um codigo de 6 digitos sera enviado no seu email de cadastro</CardDescription>
+                    <CardTitle className="flex items-center gap-2 text-xl"><MdEmail className="text-4xl"/> Insira o codigo que foi enviado para o seu email</CardTitle>
+                    <CardDescription>Um codigo de 6 digitos foi enviado no seu email de cadastro.</CardDescription>
                 </CardHeader>
                 <CardContent className="flex gap-5 flex-col">
                     <div className="w-full flex gap-2">
@@ -81,5 +112,6 @@ export default function(){
             </CardContent>
             </Card>
         </div>
+        </>
     )
 }

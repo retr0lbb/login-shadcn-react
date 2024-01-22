@@ -35,6 +35,10 @@ export default function Login(){
             alert("Data must be provided")
         }
 
+        if(localStorage.getItem("token")){
+            navigator('/content')
+            return
+        }
         axios.post("https://auth-sistem.vercel.app/auth", {email: email, pass: pass})
         .then(response => {
             if(response.status === 200){
