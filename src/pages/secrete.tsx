@@ -2,6 +2,7 @@ import rick from "@/assets/rick.webp"
 import { CiLogout } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import ReactPlayer from "react-player"
+import { useEffect } from "react";
 
 export default function(){
     const navigator = useNavigate()
@@ -9,6 +10,12 @@ export default function(){
         localStorage.clear()
         navigator("/")
     }
+
+    useEffect(() => {
+        if(!localStorage.getItem("token") && !localStorage.getItem("email")){
+            navigator("/")
+        }
+    }, [])
 
     return(
         <>
@@ -19,7 +26,7 @@ export default function(){
                 <ReactPlayer
                     url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     controls={false}
-                    playing={true}
+                    playing={false}
                     width="100%"
                     height="100%"
                 />

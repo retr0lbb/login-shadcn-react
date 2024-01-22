@@ -14,18 +14,26 @@ import { toast } from "sonner"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {Button} from "@/components/ui/button"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios"
 import {useNavigate} from "react-router-dom"
 
-
-export default function Login(){
-
+export default function Login(): any{
 
     const navigator = useNavigate()
-    const [email, setEmail] = useState("");
-    const [pass, setPass] = useState("")
+    const [email, setEmail] = useState<string>("");
+    const [pass, setPass] = useState<string>("")
 
+    useEffect(() => {
+        if(localStorage.getItem("token")){
+            navigator("/content")
+        }
+    }, [])
+
+    function clearEmailAndPass(): void {
+        setEmail("");
+        setPass("")
+    }
     function handleTestClick(){
         setEmail("admin@gmail.com")
         setPass("123")
@@ -33,11 +41,6 @@ export default function Login(){
     function handleSubmit(){
         if(!email || !pass){
             alert("Data must be provided")
-        }
-
-        if(localStorage.getItem("token")){
-            navigator('/content')
-            return
         }
         axios.post("https://auth-sistem.vercel.app/auth", {email: email, pass: pass})
         .then(response => {
@@ -52,13 +55,15 @@ export default function Login(){
                 navigator("/verify")
             }
         }).catch(err =>{
+            alert("elementos incorreto")
+            clearEmailAndPass()
             console.log(err)
         })
     }
 
 
     return(
-        <div className="h-screen w-svw flex justify-center items-center bg-fundo">
+        <div className={`h-screen w-svw flex justify-center items-center bg-fundo`}>
             
             <Card className="bg-[#333333] border-none p-8">
                 <CardHeader className="flex justify-center items-center">
