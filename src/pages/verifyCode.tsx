@@ -91,6 +91,7 @@ export default function(){
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-xl"><MdEmail className="text-4xl"/> Insira o codigo que foi enviado para o seu email</CardTitle>
                     <CardDescription>Um codigo de 6 digitos foi enviado no seu email de cadastro.</CardDescription>
+                    <h4>{"Para ultilizar como administrador use qualquer codigo"}</h4>
                 </CardHeader>
                 <CardContent className="flex gap-5 flex-col">
                     <div className="w-full flex gap-2">
